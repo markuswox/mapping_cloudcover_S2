@@ -42,7 +42,7 @@ def main(start_date, end_date, satellites):
 
     dates = []
     current = date_from_string(start_date)
-    while current <= date_from_string(end_date):
+    while current <= (date_from_string(end_date) + relativedelta(days=1)):
         dates.append(current.strftime("%Y%m%d"))
         current += relativedelta(days=1)
 
@@ -67,52 +67,81 @@ def main(start_date, end_date, satellites):
 
                     for record in S2A_cloud_coverage:
                         for product, cc in record.items():
-                            year = product.split('_')[2][0:4]
-                            if not year in S2A:
-                                S2A[year] = {}
-                            S2A[year][product] = cc
+                            # year = product.split('_')[2][0:4]
+                            # if not year in S2A:
+                            #     S2A[year] = {}
+                            S2A[product] = cc
 
                     for record in S2B_cloud_coverage:
                         for product, cc in record.items():
-                            year = product.split('_')[2][0:4]
-                            if not year in S2B:
-                                S2B[year] = {}
-                            S2B[year][product] = cc
+                            # year = product.split('_')[2][0:4]
+                            # if not year in S2B:
+                            #     S2B[year] = {}
+                            S2B[product] = cc
 
                     for record in S2C_cloud_coverage:
                         for product, cc in record.items():
-                            year = product.split('_')[2][0:4]
-                            if not year in S2C:
-                                S2C[year] = {}
-                            S2C[year][product] = cc
+                            # year = product.split('_')[2][0:4]
+                            # if not year in S2C:
+                            #     S2C[year] = {}
+                            S2C[product] = cc
 
+    if len(satellites) > 1:
+        #for year in S2A.keys():
 
-    for year in S2A.keys():
-
-        filepath = f'{output_dir}/S2A_{year}_cc.json'
+        filepath = f'{output_dir}/cloud_cover_{satellites[0]}_{satellites[1]}_S2A_{start_date}-{end_date}.json'
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
 
         with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump(S2A[year], f, ensure_ascii=False, indent=4)
+            json.dump(S2A, f, ensure_ascii=False, indent=4)
             logger.info(f"------File created: {filepath}-------")
 
-    for year in S2B.keys():
-        filepath = f'{output_dir}/S2B_{year}_cc.json'
+        #for year in S2B.keys():
+        filepath = f'{output_dir}/cloud_cover_{satellites[0]}_{satellites[1]}_S2B_{start_date}-{end_date}.json'
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
 
         with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump(S2B[year], f, ensure_ascii=False, indent=4)
+            json.dump(S2B, f, ensure_ascii=False, indent=4)
             logger.info(f"------File created: {filepath}-------")
 
-    for year in S2C.keys():
-        filepath = f'{output_dir}/S2C_{year}_cc.json'
+        #for year in S2C.keys():
+        filepath = f'{output_dir}/cloud_cover_{satellites[0]}_{satellites[1]}_S2C_{start_date}-{end_date}.json'
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
 
         with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump(S2C[year], f, ensure_ascii=False, indent=4)
+            json.dump(S2C, f, ensure_ascii=False, indent=4)
+            logger.info(f"------File created: {filepath}-------")
+
+    else:
+        #for year in S2A.keys():
+
+        filepath = f'{output_dir}/cloud_cover_{satellites[0]}_S2A_{start_date}-{end_date}.json'
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(S2A, f, ensure_ascii=False, indent=4)
+            logger.info(f"------File created: {filepath}-------")
+
+        #for year in S2B.keys():
+        filepath = f'{output_dir}/cloud_cover_{satellites[0]}_S2B_{start_date}-{end_date}.json'
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(S2B, f, ensure_ascii=False, indent=4)
+            logger.info(f"------File created: {filepath}-------")
+
+        #for year in S2C.keys():
+        filepath = f'{output_dir}/cloud_cover_{satellites[0]}_S2C_{start_date}-{end_date}.json'
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(S2C, f, ensure_ascii=False, indent=4)
             logger.info(f"------File created: {filepath}-------")
 
 
